@@ -80,7 +80,7 @@ html, body {
 
 .days-grid {
   display: grid;
-  grid-template-columns: repeat(52, 1fr);
+  grid-template-columns: repeat(26, 1fr);
   gap: 2px;
   margin: 20px 0;
   padding: 20px;
@@ -213,7 +213,6 @@ if (!deadlineStr) {
     const elapsed = now - startDate;
     const totalDays = Math.ceil(total / (1000 * 60 * 60 * 24));
     const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
-    const currentDay = daysPassed;
     
     // Вычисляем процент прогресса
     let progress = 0;
@@ -226,17 +225,36 @@ if (!deadlineStr) {
     
     progressTextElement.textContent = `${progress.toFixed(1)}%`;
     
+    // Фиксированный размер сетки (26 колонок x 52 строки = 1352 ячейки, как в life но в два раза меньше)
+    const gridColumns = 26;
+    const gridRows = 52;
+    const totalCells = gridColumns * gridRows; // 1352 ячейки
+    
+    // Вычисляем сколько дней представляет одна ячейка
+    const daysPerCell = totalDays / totalCells;
+    
     daysGrid.innerHTML = "";
     
-    // Создаем сетку для всех дней от начала года до дедлайна
-    for (let i = 0; i < totalDays; i++) {
+    // Создаем сетку фиксированного размера
+    for (let i = 0; i < totalCells; i++) {
       const day = document.createElement("div");
       day.className = "day";
       
-      if (i < daysPassed) {
+      // Вычисляем диапазон дней для этой ячейки
+      const cellStartDay = Math.floor(i * daysPerCell);
+      const cellEndDay = Math.floor((i + 1) * daysPerCell);
+      
+      // Проверяем, попадает ли текущий день в эту ячейку
+      if (cellEndDay <= daysPassed) {
+        // Все дни в этой ячейке прошли
         day.classList.add("passed");
-      } else if (i === currentDay && now <= deadline) {
-        day.classList.add("current");
+      } else if (cellStartDay <= daysPassed && daysPassed < cellEndDay) {
+        // Текущий день в этой ячейке
+        if (now <= deadline) {
+          day.classList.add("current");
+        } else {
+          day.classList.add("passed");
+        }
       }
       
       daysGrid.appendChild(day);
