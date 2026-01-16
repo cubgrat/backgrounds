@@ -76,15 +76,6 @@ html, body {
   opacity: 0.8;
 }
 
-/* Текст */
-.custom-text {
-  text-align: center;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--calendar-text);
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
 
 /* Дни недели */
 .weekdays {
@@ -159,7 +150,6 @@ html, body {
     <div class="calendar">
       <div id="month" class="calendar-header"></div>
       <div id="info" class="calendar-sub"></div>
-      <div id="custom-text" class="custom-text" style="display: none;"></div>
 
       <div class="weekdays">
         <div>Пн</div>
@@ -220,14 +210,6 @@ const months = [
 
 document.getElementById("month").textContent = months[month];
 document.getElementById("info").textContent = year;
-
-/* Кастомный текст */
-const customText = getQueryParam("q");
-if (customText) {
-  const textElement = document.getElementById("custom-text");
-  textElement.textContent = decodeURIComponent(customText);
-  textElement.style.display = "block";
-}
 
 /* Количество дней в месяце */
 const daysInMonth = new Date(year, month + 1, 0).getDate();

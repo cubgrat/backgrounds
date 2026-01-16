@@ -16,15 +16,51 @@ body {
   background: #1e1e1e;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  padding: 30px 20px;
+  text-align: center;
+  border-bottom: 1px solid #444444;
 }
 
 .container {
   max-width: 1200px;
   width: 100%;
+  margin: 0 auto;
+  padding: 40px 20px;
   text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.footer {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #444444;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+
+.footer a {
+  color: #e53935;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.header h1 {
+  color: #ffffff;
+  font-size: 32px;
+  margin: 0;
+  font-weight: bold;
 }
 
 h1 {
@@ -119,6 +155,10 @@ h1 {
 </head>
 <body>
 
+<header class="header">
+  <h1>Backgrounds</h1>
+</header>
+
 <div class="container">
   <h1>Динамические обои</h1>
   <p class="subtitle">Выберите тип обоев для вашего устройства</p>
@@ -148,9 +188,11 @@ h1 {
       <div class="tile-description">Красивые случайные обои без дополнительных элементов</div>
     </a>
   </div>
-
-  <a href="common/about.html" class="footer-link">О проекте</a>
 </div>
+
+<footer class="footer">
+  Создано <a href="https://t.me/cubgrat" target="_blank">@cubgrat</a>
+</footer>
 
 </body>
 </html>

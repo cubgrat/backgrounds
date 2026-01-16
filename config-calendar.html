@@ -300,9 +300,6 @@ button:hover {
           <option value="0">Светлая</option>
         </select>
 
-        <label for="text">Текст (опционально):</label>
-        <input type="text" id="text" placeholder="Введите текст для календаря">
-
         <label for="resolution">Модель iPhone:</label>
         <select id="resolution">
           <option value="1170x2532">iPhone 13/14/15</option>
@@ -318,11 +315,6 @@ button:hover {
         </select>
 
         <button id="generate">Сгенерировать ссылку</button>
-
-        <div class="output-container" style="display: none;" id="output-wrapper">
-          <div class="output" id="output"></div>
-          <button class="copy-btn" id="copy-btn">Копировать</button>
-        </div>
       </div>
     </div>
   </div>
@@ -399,44 +391,20 @@ function detectDeviceResolution() {
 detectDeviceResolution();
 
 const generateBtn = document.getElementById('generate');
-const textInput = document.getElementById('text');
 const themeSelect = document.getElementById('theme');
-const output = document.getElementById('output');
-const outputWrapper = document.getElementById('output-wrapper');
 const shortcutUrlInput = document.getElementById('shortcut-url');
 
 function generateUrl() {
   const theme = themeSelect.value;
-  const text = textInput.value.trim();
   const resolution = resolutionSelect.value;
   const [width, height] = resolution.split('x');
 
-  let url = window.location.origin + '/backgrounds/calendar.html?theme=' + theme + '&width=' + width + '&height=' + height;
-
-  if(text !== "") {
-    url += '&q=' + encodeURIComponent(text);
-  }
-
-  return url;
+  return window.location.origin + '/backgrounds/calendar.html?theme=' + theme + '&width=' + width + '&height=' + height;
 }
 
 generateBtn.addEventListener('click', () => {
   const url = generateUrl();
-  output.textContent = url;
   shortcutUrlInput.value = url;
-  outputWrapper.style.display = 'flex';
-});
-
-const copyBtn = document.getElementById('copy-btn');
-copyBtn.addEventListener('click', () => {
-  if(output.textContent.trim() !== "") {
-    navigator.clipboard.writeText(output.textContent).then(() => {
-      copyBtn.textContent = '✓ Скопировано';
-      setTimeout(() => {
-        copyBtn.textContent = 'Копировать';
-      }, 2000);
-    });
-  }
 });
 
 const copyUrlIcon = document.getElementById('copy-url-icon');
@@ -452,11 +420,10 @@ copyUrlIcon.addEventListener('click', () => {
 });
 
 // Генерируем URL при изменении параметров
-[themeSelect, textInput, resolutionSelect].forEach(el => {
+[themeSelect, resolutionSelect].forEach(el => {
   el.addEventListener('change', () => {
-    if(outputWrapper.style.display === 'flex') {
+    if(shortcutUrlInput.value.trim() !== "") {
       const url = generateUrl();
-      output.textContent = url;
       shortcutUrlInput.value = url;
     }
   });
