@@ -2,239 +2,232 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Random Landscape Calendar</title>
+<title>Random Landscape Calendar - Главная</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
-html, body {
+body {
   margin: 0;
-  padding: 0;
-  height: 100%;
   font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #1e1e1e;
+  color: #fff;
+  transition: background 0.3s, color 0.3s;
 }
 
 .container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Фон */
-.background {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: filter 0.3s;
-}
-
-/* Темы */
-.theme-light .background {
-  filter: brightness(0.9);
-}
-
-.theme-dark .background {
-  filter: brightness(0.5);
-}
-
-/* Центрирование календаря */
-.wrapper {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-}
-
-/* Календарь */
-.calendar {
-  width: 340px;
+  background: #2e2e2e;
+  padding: 30px;
   border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-  background: var(--calendar-bg);
-  color: var(--calendar-text);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  width: 340px;
+  text-align: center;
+  transition: background 0.3s, color 0.3s;
 }
 
-/* Заголовок месяца */
-.calendar-header {
-  background: var(--calendar-header-bg);
-  color: var(--calendar-header-text);
-  padding: 12px;
-  text-align: center;
+h1 {
   font-size: 20px;
-  font-weight: bold;
+  margin-bottom: 16px;
 }
 
-/* Год */
-.calendar-sub {
-  text-align: center;
-  padding: 8px;
+label {
+  display: block;
+  margin-top: 12px;
   font-size: 14px;
-  opacity: 0.8;
 }
 
-/* Дни недели */
-.weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding: 0 12px;
-  font-size: 12px;
-  text-align: center;
-  opacity: 0.7;
+input[type="text"], select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #3a3a3a;
+  color: #fff;
 }
 
-.weekdays div {
-  padding: 4px 0;
+button {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-/* Сетка дней */
-.days-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  padding: 12px;
+#generate {
+  background: #e53935;
+  color: #fff;
+  width: 100%;
 }
 
-.day {
-  aspect-ratio: 1 / 1;
+#generate:hover {
+  background: #d32f2f;
+}
+
+#theme-toggle {
+  background: #555;
+  color: #fff;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#theme-toggle:hover {
+  background: #777;
+}
+
+.output-container {
+  margin-top: 16px;
   display: flex;
+  gap: 8px;
   align-items: center;
   justify-content: center;
-  background: var(--day-bg);
-  border-radius: 8px;
+}
+
+.output {
+  word-break: break-all;
   font-size: 14px;
-  color: var(--day-text);
+  flex: 1;
 }
 
-.today {
-  background: var(--today-bg);
-  color: var(--today-text);
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+.copy-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #e53935;
+  color: #fff;
+  cursor: pointer;
 }
 
-/* Переменные тем */
-.theme-light {
-  --calendar-bg: #ffffff;
-  --calendar-text: #000000;
-  --calendar-header-bg: #e53935;
-  --calendar-header-text: #ffffff;
-  --day-bg: #f0f0f0;
-  --day-text: #333333;
-  --today-bg: #e53935;
-  --today-text: #ffffff;
+.copy-btn:hover {
+  background: #d32f2f;
 }
 
-.theme-dark {
-  --calendar-bg: #1e1e1e;
-  --calendar-text: #ffffff;
-  --calendar-header-bg: #444444;
-  --calendar-header-text: #ffffff;
-  --day-bg: #2e2e2e;
-  --day-text: #dddddd;
-  --today-bg: #ff5252;
-  --today-text: #ffffff;
+.light-theme {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.light-theme .container {
+  background: #fff;
+  color: #111;
+}
+
+.light-theme input[type="text"], .light-theme select {
+  background: #eee;
+  color: #111;
+  border: 1px solid #ccc;
 }
 </style>
 </head>
-<body>
+<body class="dark-theme">
 
-<div id="app" class="container theme-dark">
-  <div id="bg" class="background"></div>
+<div class="container">
+  <h1>Сгенерировать ссылку на календарь</h1>
 
-  <div class="wrapper">
-    <div class="calendar">
-      <div id="month" class="calendar-header"></div>
-      <div id="info" class="calendar-sub"></div>
+  <label for="theme">Тема:</label>
+  <select id="theme">
+    <option value="1" selected>Тёмная</option>
+    <option value="0">Светлая</option>
+  </select>
 
-      <div class="weekdays">
-        <div>Пн</div>
-        <div>Вт</div>
-        <div>Ср</div>
-        <div>Чт</div>
-        <div>Пт</div>
-        <div>Сб</div>
-        <div>Вс</div>
-      </div>
+  <label for="text">Текст (опционально):</label>
+  <input type="text" id="text" placeholder="Введите текст для календаря">
 
-      <div id="days" class="days-grid"></div>
-    </div>
+  <label for="resolution">Устройство / разрешение:</label>
+  <select id="resolution">
+    <option value="1920x1080">1920x1080 (Full HD)</option>
+    <option value="1280x720">1280x720 (HD)</option>
+    <option value="1170x2532">iPhone 13</option>
+    <option value="1125x2436">iPhone X/XS/11 Pro</option>
+    <option value="1080x2340">Android 1080x2340</option>
+    <option value="1440x2960">Android 1440x2960</option>
+  </select>
+
+  <button id="generate">Сгенерировать ссылку</button>
+  <button id="theme-toggle">Переключить тему</button>
+
+  <div class="output-container">
+    <div class="output" id="output"></div>
+    <button class="copy-btn" id="copy-btn">Копировать</button>
   </div>
 </div>
 
 <script>
-/* Утилиты */
-function getQueryParam(name) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(name);
-}
+// Тема
+const body = document.body;
+const themeSelect = document.getElementById('theme');
+const themeToggle = document.getElementById('theme-toggle');
+let currentTheme = 'dark';
 
-function generateRandomSeed() {
-  return Math.random().toString(36).substring(2, 12) + Date.now();
-}
+themeToggle.addEventListener('click', () => {
+  if(currentTheme === 'dark') {
+    body.classList.add('light-theme');
+    body.classList.remove('dark-theme');
+    themeSelect.value = '0';
+    currentTheme = 'light';
+  } else {
+    body.classList.remove('light-theme');
+    body.classList.add('dark-theme');
+    themeSelect.value = '1';
+    currentTheme = 'dark';
+  }
+});
 
-/* Тема */
-const theme = getQueryParam("theme");
-const app = document.getElementById("app");
+// Автоподстановка разрешения устройства
+const resolutionSelect = document.getElementById('resolution');
+function detectDeviceResolution() {
+  const w = window.screen.width;
+  const h = window.screen.height;
+  const resStr = `${w}x${h}`;
 
-if (theme === "0") {
-  app.className = "container theme-light";
-} else {
-  app.className = "container theme-dark";
-}
-
-/* Фоновая картинка */
-const seed = generateRandomSeed();
-const imageUrl = `https://picsum.photos/seed/${seed}/1920/1080`;
-
-const bg = document.getElementById("bg");
-bg.style.backgroundImage = `url("${imageUrl}")`;
-
-/* Календарь */
-const now = new Date();
-
-const year = now.getFullYear();
-const month = now.getMonth();
-const today = now.getDate();
-
-const months = [
-  "Январь","Февраль","Март","Апрель","Май","Июнь",
-  "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"
-];
-
-document.getElementById("month").textContent = months[month];
-document.getElementById("info").textContent = year;
-
-/* Количество дней в месяце */
-const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-/* День недели первого числа (Пн = 0) */
-let firstDay = new Date(year, month, 1).getDay();
-firstDay = firstDay === 0 ? 6 : firstDay - 1;
-
-const daysContainer = document.getElementById("days");
-
-/* Пустые ячейки */
-for (let i = 0; i < firstDay; i++) {
-  const empty = document.createElement("div");
-  daysContainer.appendChild(empty);
-}
-
-/* Дни месяца */
-for (let day = 1; day <= daysInMonth; day++) {
-  const cell = document.createElement("div");
-  cell.className = "day";
-  cell.textContent = day;
-
-  if (day === today) {
-    cell.classList.add("today");
+  // Если есть подходящий вариант в списке — выбираем его
+  for (let i = 0; i < resolutionSelect.options.length; i++) {
+    if (resolutionSelect.options[i].value === resStr) {
+      resolutionSelect.selectedIndex = i;
+      return;
+    }
   }
 
-  daysContainer.appendChild(cell);
+  // Если нет — добавляем свой вариант в список
+  const option = document.createElement('option');
+  option.value = resStr;
+  option.textContent = `Ваше устройство (${resStr})`;
+  option.selected = true;
+  resolutionSelect.appendChild(option);
 }
+detectDeviceResolution();
+
+// Генерация ссылки
+const generateBtn = document.getElementById('generate');
+const textInput = document.getElementById('text');
+const output = document.getElementById('output');
+
+generateBtn.addEventListener('click', () => {
+  const theme = themeSelect.value;
+  const text = textInput.value.trim();
+  const resolution = resolutionSelect.value;
+
+  let url = window.location.origin + '/calendar.html?theme=' + theme + '&res=' + resolution;
+  if(text !== "") {
+    url += '&q=' + encodeURIComponent(text);
+  }
+
+  output.textContent = url;
+});
+
+// Копирование
+const copyBtn = document.getElementById('copy-btn');
+copyBtn.addEventListener('click', () => {
+  if(output.textContent.trim() !== "") {
+    navigator.clipboard.writeText(output.textContent).then(() => {
+      alert('Ссылка скопирована в буфер обмена');
+    });
+  }
+});
 </script>
 
 </body>
