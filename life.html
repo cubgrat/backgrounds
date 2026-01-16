@@ -71,6 +71,14 @@ html, body {
   color: var(--title-color);
 }
 
+.progress-text {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--card-text);
+  opacity: 0.9;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -163,6 +171,7 @@ html, body {
 
   <div class="wrapper">
     <div class="life-card">
+      <div class="progress-text" id="progress-text"></div>
       <div class="weeks-grid" id="weeks-grid"></div>
     </div>
   </div>
@@ -201,9 +210,11 @@ bg.style.backgroundImage = `url("${imageUrl}")`;
 /* Календарь жизни */
 const birthdayStr = getQueryParam("birthday");
 const weeksGrid = document.getElementById("weeks-grid");
+const progressTextElement = document.getElementById("progress-text");
 const totalWeeks = 90 * 52; // 90 лет в неделях
 
 if (!birthdayStr) {
+  progressTextElement.textContent = "0%";
   for (let i = 0; i < totalWeeks; i++) {
     const week = document.createElement("div");
     week.className = "week";
@@ -217,6 +228,10 @@ if (!birthdayStr) {
   const msPerWeek = 1000 * 60 * 60 * 24 * 7;
   const weeksLived = Math.floor((now - birthday) / msPerWeek);
   const currentWeek = weeksLived;
+  
+  // Вычисляем процент прогресса
+  const progress = Math.max(0, Math.min(100, (weeksLived / totalWeeks) * 100));
+  progressTextElement.textContent = `${progress.toFixed(1)}%`;
   
   // Создаем сетку недель
   for (let i = 0; i < totalWeeks; i++) {

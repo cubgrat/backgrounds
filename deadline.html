@@ -70,10 +70,12 @@ html, body {
   color: var(--card-text);
 }
 
-.deadline-date {
-  font-size: 14px;
-  opacity: 0.8;
-  margin-bottom: 20px;
+.progress-text {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--card-text);
+  opacity: 0.9;
 }
 
 .days-grid {
@@ -129,6 +131,8 @@ html, body {
 
   <div class="wrapper">
     <div class="progress-card">
+      <div class="title" id="title" style="display: none;"></div>
+      <div class="progress-text" id="progress-text"></div>
       <div class="days-grid" id="days-grid"></div>
     </div>
   </div>
@@ -181,11 +185,19 @@ bg.style.backgroundImage = `url("${imageUrl}")`;
 
 /* Параметры дедлайна */
 const deadlineStr = getQueryParam("deadline");
+const titleParam = getQueryParam("title");
 const daysGrid = document.getElementById("days-grid");
-const totalDays = 365; // Дней в году
+const titleElement = document.getElementById("title");
+const progressTextElement = document.getElementById("progress-text");
+
+if (titleParam) {
+  titleElement.textContent = decodeURIComponent(titleParam);
+  titleElement.style.display = "block";
+}
 
 if (!deadlineStr) {
-  for (let i = 0; i < totalDays; i++) {
+  progressTextElement.textContent = "0%";
+  for (let i = 0; i < 365; i++) {
     const day = document.createElement("div");
     day.className = "day";
     daysGrid.appendChild(day);
@@ -199,11 +211,24 @@ if (!deadlineStr) {
     const startDate = new Date(deadline.getFullYear(), 0, 1); // Начало года
     const total = deadline - startDate;
     const elapsed = now - startDate;
+    const totalDays = Math.ceil(total / (1000 * 60 * 60 * 24));
     const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
-    const currentDay = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+    const currentDay = daysPassed;
+    
+    // Вычисляем процент прогресса
+    let progress = 0;
+    if (totalDays > 0) {
+      progress = Math.max(0, Math.min(100, (daysPassed / totalDays) * 100));
+    }
+    if (now > deadline) {
+      progress = 100;
+    }
+    
+    progressTextElement.textContent = `${progress.toFixed(1)}%`;
     
     daysGrid.innerHTML = "";
     
+    // Создаем сетку для всех дней от начала года до дедлайна
     for (let i = 0; i < totalDays; i++) {
       const day = document.createElement("div");
       day.className = "day";
