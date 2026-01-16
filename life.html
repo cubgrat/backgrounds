@@ -55,9 +55,9 @@ html, body {
 .life-card {
   width: 90%;
   max-width: 500px;
-  border-radius: 20px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
   background: var(--card-bg);
   color: var(--card-text);
   padding: 30px;
@@ -81,7 +81,7 @@ html, body {
 .stat-item {
   padding: 20px;
   background: var(--stat-bg);
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .stat-value {
@@ -103,7 +103,7 @@ html, body {
   margin: 20px 0;
   padding: 20px;
   background: var(--grid-bg);
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .week {
@@ -124,34 +124,35 @@ html, body {
 
 .info-text {
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.7;
   margin-top: 20px;
   line-height: 1.6;
+  display: none;
 }
 
 /* Переменные тем */
 .theme-light {
-  --card-bg: rgba(255,255,255,0.95);
-  --card-text: #333;
-  --title-color: #4facfe;
-  --stat-bg: #f0f9ff;
-  --stat-value: #4facfe;
-  --grid-bg: #f5f5f5;
+  --card-bg: #ffffff;
+  --card-text: #000000;
+  --title-color: #000000;
+  --stat-bg: #f0f0f0;
+  --stat-value: #e53935;
+  --grid-bg: #f0f0f0;
   --week-empty: #e0e0e0;
-  --week-lived: #4facfe;
-  --week-current: #00f2fe;
+  --week-lived: #e53935;
+  --week-current: #e53935;
 }
 
 .theme-dark {
-  --card-bg: rgba(30,30,30,0.95);
-  --card-text: #fff;
-  --title-color: #6bc5ff;
-  --stat-bg: #1a1a2e;
-  --stat-value: #6bc5ff;
-  --grid-bg: #2a2a3e;
-  --week-empty: #444;
-  --week-lived: #6bc5ff;
-  --week-current: #00f2fe;
+  --card-bg: #1e1e1e;
+  --card-text: #ffffff;
+  --title-color: #ffffff;
+  --stat-bg: #2e2e2e;
+  --stat-value: #ff5252;
+  --grid-bg: #2e2e2e;
+  --week-empty: #444444;
+  --week-lived: #ff5252;
+  --week-current: #ff5252;
 }
 </style>
 </head>
@@ -162,24 +163,7 @@ html, body {
 
   <div class="wrapper">
     <div class="life-card">
-      <div class="title">Календарь жизни</div>
-      
-      <div class="stats">
-        <div class="stat-item">
-          <div class="stat-value" id="weeks-lived">0</div>
-          <div class="stat-label">Недель прожито</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="weeks-total">0</div>
-          <div class="stat-label">Всего недель (90 лет)</div>
-        </div>
-      </div>
-      
       <div class="weeks-grid" id="weeks-grid"></div>
-      
-      <div class="info-text">
-        Каждая клетка = 1 неделя жизни. Синие клетки - прожитые недели, голубая - текущая неделя.
-      </div>
     </div>
   </div>
 </div>
@@ -220,8 +204,6 @@ const weeksGrid = document.getElementById("weeks-grid");
 const totalWeeks = 90 * 52; // 90 лет в неделях
 
 if (!birthdayStr) {
-  document.getElementById("weeks-lived").textContent = "0";
-  document.getElementById("weeks-total").textContent = totalWeeks;
   for (let i = 0; i < totalWeeks; i++) {
     const week = document.createElement("div");
     week.className = "week";
@@ -235,9 +217,6 @@ if (!birthdayStr) {
   const msPerWeek = 1000 * 60 * 60 * 24 * 7;
   const weeksLived = Math.floor((now - birthday) / msPerWeek);
   const currentWeek = weeksLived;
-  
-  document.getElementById("weeks-lived").textContent = weeksLived.toLocaleString();
-  document.getElementById("weeks-total").textContent = totalWeeks.toLocaleString();
   
   // Создаем сетку недель
   for (let i = 0; i < totalWeeks; i++) {

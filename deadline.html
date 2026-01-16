@@ -54,84 +54,71 @@ html, body {
 .progress-card {
   width: 90%;
   max-width: 400px;
-  border-radius: 20px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
   background: var(--card-bg);
   color: var(--card-text);
-  padding: 40px 30px;
+  padding: 30px;
   text-align: center;
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: var(--title-color);
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: var(--card-text);
 }
 
 .deadline-date {
-  font-size: 18px;
-  opacity: 0.8;
-  margin-bottom: 30px;
-}
-
-.progress-container {
-  margin: 30px 0;
-}
-
-.progress-label {
   font-size: 14px;
-  opacity: 0.7;
-  margin-bottom: 10px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 12px;
-  background: var(--progress-bg);
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--progress-fill);
-  border-radius: 6px;
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--progress-text);
-  margin: 20px 0;
-}
-
-.time-remaining {
-  font-size: 16px;
   opacity: 0.8;
-  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(52, 1fr);
+  gap: 2px;
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--grid-bg);
+  border-radius: 8px;
+}
+
+.day {
+  aspect-ratio: 1;
+  background: var(--day-empty);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.day.passed {
+  background: var(--day-passed);
+}
+
+.day.current {
+  background: var(--day-current);
+  box-shadow: 0 0 4px var(--day-current);
 }
 
 /* Переменные тем */
 .theme-light {
-  --card-bg: rgba(255,255,255,0.95);
-  --card-text: #333;
-  --title-color: #f5576c;
-  --progress-bg: #f0f0f0;
-  --progress-fill: #f5576c;
-  --progress-text: #f5576c;
+  --card-bg: #ffffff;
+  --card-text: #000000;
+  --grid-bg: #f0f0f0;
+  --day-empty: #e0e0e0;
+  --day-passed: #e53935;
+  --day-current: #e53935;
 }
 
 .theme-dark {
-  --card-bg: rgba(30,30,30,0.95);
-  --card-text: #fff;
-  --title-color: #ff6b7a;
-  --progress-bg: #444;
-  --progress-fill: #ff6b7a;
-  --progress-text: #ff6b7a;
+  --card-bg: #1e1e1e;
+  --card-text: #ffffff;
+  --grid-bg: #2e2e2e;
+  --day-empty: #444444;
+  --day-passed: #ff5252;
+  --day-current: #ff5252;
 }
 </style>
 </head>
@@ -142,18 +129,7 @@ html, body {
 
   <div class="wrapper">
     <div class="progress-card">
-      <div class="title" id="title">Дедлайн</div>
-      <div class="deadline-date" id="deadline-date"></div>
-      
-      <div class="progress-container">
-        <div class="progress-label">Прогресс</div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
-        <div class="progress-text" id="progress-text">0%</div>
-      </div>
-      
-      <div class="time-remaining" id="time-remaining"></div>
+      <div class="days-grid" id="days-grid"></div>
     </div>
   </div>
 </div>
@@ -205,46 +181,45 @@ bg.style.backgroundImage = `url("${imageUrl}")`;
 
 /* Параметры дедлайна */
 const deadlineStr = getQueryParam("deadline");
-const titleParam = getQueryParam("title");
-
-if (titleParam) {
-  document.getElementById("title").textContent = decodeURIComponent(titleParam);
-}
+const daysGrid = document.getElementById("days-grid");
+const totalDays = 365; // Дней в году
 
 if (!deadlineStr) {
-  document.getElementById("deadline-date").textContent = "Дата не указана";
-  document.getElementById("progress-text").textContent = "0%";
-  document.getElementById("time-remaining").textContent = "";
+  for (let i = 0; i < totalDays; i++) {
+    const day = document.createElement("div");
+    day.className = "day";
+    daysGrid.appendChild(day);
+  }
 } else {
   const deadline = new Date(deadlineStr + "T23:59:59");
   const now = new Date();
-  
-  document.getElementById("deadline-date").textContent = formatDate(deadline);
   
   function updateProgress() {
     const now = new Date();
     const startDate = new Date(deadline.getFullYear(), 0, 1); // Начало года
     const total = deadline - startDate;
     const elapsed = now - startDate;
-    let progress = Math.max(0, Math.min(100, (elapsed / total) * 100));
+    const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+    const currentDay = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
     
-    // Если дедлайн прошел, прогресс = 100%
-    if (now > deadline) {
-      progress = 100;
+    daysGrid.innerHTML = "";
+    
+    for (let i = 0; i < totalDays; i++) {
+      const day = document.createElement("div");
+      day.className = "day";
+      
+      if (i < daysPassed) {
+        day.classList.add("passed");
+      } else if (i === currentDay && now <= deadline) {
+        day.classList.add("current");
+      }
+      
+      daysGrid.appendChild(day);
     }
-    
-    const remaining = deadline - now;
-    const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    
-    document.getElementById("progress-fill").style.width = progress + "%";
-    document.getElementById("progress-text").textContent = progress.toFixed(1) + "%";
-    document.getElementById("time-remaining").textContent = formatTimeRemaining(days, hours, minutes);
   }
   
   updateProgress();
-  setInterval(updateProgress, 60000); // Обновление каждую минуту
+  setInterval(updateProgress, 86400000); // Обновление раз в день
 }
 </script>
 

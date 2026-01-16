@@ -13,94 +13,91 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: #1e1e1e;
+  color: #ffffff;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 20px;
 }
 
 .container {
-  background: rgba(255,255,255,0.95);
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 500px;
-  width: 100%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-}
-
-h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
-  color: #333;
-  text-align: center;
-}
-
-.subtitle {
-  color: #666;
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 14px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .back-link {
   display: inline-block;
-  color: #f5576c;
+  color: #ffffff;
   text-decoration: none;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-size: 14px;
+  opacity: 0.7;
 }
 
 .back-link:hover {
-  text-decoration: underline;
+  opacity: 1;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.subtitle {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 40px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.form-section {
+  background: #2e2e2e;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 30px;
 }
 
 label {
   display: block;
-  margin-top: 20px;
+  margin-bottom: 8px;
   font-size: 14px;
-  color: #333;
+  color: rgba(255,255,255,0.9);
   font-weight: 500;
 }
 
 input[type="text"], input[type="date"], select {
   width: 100%;
   padding: 12px;
-  margin-top: 8px;
-  border-radius: 8px;
-  border: 2px solid #e0e0e0;
-  background: #fff;
-  color: #333;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid #444444;
+  background: #1e1e1e;
+  color: #ffffff;
   font-size: 16px;
   transition: border-color 0.3s;
 }
 
 input[type="text"]:focus, input[type="date"]:focus, select:focus {
   outline: none;
-  border-color: #f5576c;
+  border-color: #e53935;
 }
 
 button {
-  margin-top: 30px;
-  padding: 14px;
+  padding: 14px 28px;
   font-size: 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s;
-  width: 100%;
   font-weight: 600;
+  background: #e53935;
+  color: #ffffff;
+  width: 100%;
 }
 
-#generate {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: #fff;
-}
-
-#generate:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(245,87,108,0.4);
+button:hover {
+  background: #d32f2f;
 }
 
 .output-container {
@@ -115,58 +112,143 @@ button {
   font-size: 14px;
   flex: 1;
   padding: 12px;
-  background: #f5f5f5;
-  border-radius: 8px;
-  color: #333;
-  border: 2px solid #e0e0e0;
+  background: #1e1e1e;
+  border-radius: 6px;
+  color: #ffffff;
+  border: 1px solid #444444;
 }
 
 .copy-btn {
   padding: 12px 20px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: none;
-  background: #f5576c;
-  color: #fff;
+  background: #444444;
+  color: #ffffff;
   cursor: pointer;
   font-weight: 600;
   white-space: nowrap;
 }
 
 .copy-btn:hover {
-  background: #e04a5e;
+  background: #555555;
 }
 
 .instructions {
-  background: #fff0f3;
-  border-left: 4px solid #f5576c;
-  padding: 20px;
-  margin-top: 30px;
+  background: #2e2e2e;
   border-radius: 8px;
+  padding: 30px;
+  margin-top: 30px;
 }
 
-.instructions h3 {
-  color: #f5576c;
-  margin-bottom: 12px;
+.instructions h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.step {
+  margin-bottom: 30px;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  color: #1e1e1e;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.step-title {
   font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
 }
 
-.instructions ol {
-  margin-left: 20px;
-  color: #555;
-  line-height: 1.8;
+.step-content {
+  margin-left: 44px;
 }
 
-.instructions li {
-  margin-bottom: 8px;
+.step-content label {
+  margin-top: 16px;
+}
+
+.instruction-box {
+  background: #1e1e1e;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.9);
+}
+
+.instruction-box strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.warning-box {
+  background: #ffa726;
+  color: #1e1e1e;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.warning-box strong {
+  font-weight: 600;
+}
+
+.url-field {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.url-field input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.copy-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.copy-icon:hover {
+  opacity: 1;
 }
 
 @media (max-width: 600px) {
   .container {
-    padding: 30px 20px;
+    padding: 0;
   }
   
   h1 {
     font-size: 24px;
+  }
+  
+  .step-content {
+    margin-left: 0;
   }
 }
 </style>
@@ -174,58 +256,104 @@ button {
 <body>
 
 <div class="container">
-  <a href="index.html" class="back-link">← Назад к выбору</a>
+  <a href="index.html" class="back-link">← Назад</a>
   
-  <h1>⏰ Прогресс дедлайна</h1>
-  <p class="subtitle">Отслеживайте прогресс до важной даты</p>
+  <h1>Настройка прогресса дедлайна</h1>
+  <p class="subtitle">Сначала определите настройки обоев. Затем создайте автоматизацию для ежедневного запуска. Наконец, добавьте действия шортката для обновления экрана блокировки.</p>
 
-  <label for="deadline">Дата дедлайна:</label>
-  <input type="date" id="deadline" required>
+  <div class="form-section">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title">Определите ваши обои</div>
+      </div>
+      <div class="step-content">
+        <label for="deadline">Дата дедлайна:</label>
+        <input type="date" id="deadline" required>
 
-  <label for="title">Название события (опционально):</label>
-  <input type="text" id="title" placeholder="Например: День рождения, Экзамен, Отпуск">
+        <label for="title">Название события (опционально):</label>
+        <input type="text" id="title" placeholder="Например: День рождения, Экзамен, Отпуск">
 
-  <label for="theme">Тема:</label>
-  <select id="theme">
-    <option value="1" selected>Тёмная</option>
-    <option value="0">Светлая</option>
-  </select>
+        <label for="theme">Тема:</label>
+        <select id="theme">
+          <option value="1" selected>Тёмная</option>
+          <option value="0">Светлая</option>
+        </select>
 
-  <label for="resolution">Устройство / разрешение:</label>
-  <select id="resolution">
-    <option value="1920x1080">1920x1080 (Full HD)</option>
-    <option value="2560x1440">2560x1440 (2K)</option>
-    <option value="3840x2160">3840x2160 (4K)</option>
-    <option value="1170x2532">iPhone 13/14/15</option>
-    <option value="1284x2778">iPhone 13/14/15 Pro Max</option>
-    <option value="1080x2340">iPhone 12 mini / SE 2</option>
-    <option value="1125x2436">iPhone X/XS/11 Pro</option>
-    <option value="1242x2688">iPhone 8 Plus / XS Max</option>
-    <option value="1179x2556">iPhone 14 Pro</option>
-    <option value="1290x2796">iPhone 14 Pro Max</option>
-  </select>
+        <label for="resolution">Модель iPhone:</label>
+        <select id="resolution">
+          <option value="1170x2532">iPhone 13/14/15</option>
+          <option value="1284x2778">iPhone 13/14/15 Pro Max</option>
+          <option value="1179x2556">iPhone 14 Pro</option>
+          <option value="1290x2796">iPhone 14 Pro Max</option>
+          <option value="1080x2340">iPhone 12 mini / SE 2</option>
+          <option value="1125x2436">iPhone X/XS/11 Pro</option>
+          <option value="1242x2688">iPhone 8 Plus / XS Max</option>
+          <option value="1920x1080">1920x1080 (Full HD)</option>
+          <option value="2560x1440">2560x1440 (2K)</option>
+          <option value="3840x2160">3840x2160 (4K)</option>
+        </select>
 
-  <button id="generate">Сгенерировать ссылку</button>
+        <button id="generate">Сгенерировать ссылку</button>
 
-  <div class="output-container" style="display: none;" id="output-wrapper">
-    <div class="output" id="output"></div>
-    <button class="copy-btn" id="copy-btn">Копировать</button>
+        <div class="output-container" style="display: none;" id="output-wrapper">
+          <div class="output" id="output"></div>
+          <button class="copy-btn" id="copy-btn">Копировать</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="instructions">
-    <h3>📱 Инструкция по установке</h3>
-    <ol>
-      <li>Скопируйте сгенерированную ссылку</li>
-      <li>Откройте ссылку в браузере на вашем устройстве</li>
-      <li>Сделайте скриншот страницы</li>
-      <li>Установите скриншот как обои через настройки устройства</li>
-      <li>Для автоматического обновления используйте приложения автоматизации (iOS Shortcuts, Android Tasker)</li>
-    </ol>
+    <h2>Шаги установки</h2>
+    
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title">Создайте автоматизацию</div>
+      </div>
+      <div class="step-content">
+        <div class="instruction-box">
+          Откройте приложение <strong>Shortcuts</strong> → Перейдите на вкладку <strong>Automation</strong> → <strong>New Automation</strong> → <strong>Time of Day</strong> → <strong>6:00 AM</strong> → Повтор "Daily" → Выберите "Run Immediately" → <strong>Create New Shortcut</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title">Создайте шорткат</div>
+      </div>
+      <div class="step-content">
+        <div style="margin-top: 12px; font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 12px;">ДОБАВЬТЕ ЭТИ ДЕЙСТВИЯ:</div>
+        
+        <div style="margin-bottom: 16px;">
+          <div style="font-weight: 600; margin-bottom: 8px; color: #ffffff;">3.1 "Get Contents of URL"</div>
+          <div style="color: rgba(255,255,255,0.9); margin-bottom: 8px;">вставьте следующий URL:</div>
+          <div class="url-field">
+            <input type="text" id="shortcut-url" readonly>
+            <svg class="copy-icon" id="copy-url-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-weight: 600; margin-bottom: 8px; color: #ffffff;">3.2 "Set Wallpaper Photo"</div>
+          <div style="color: rgba(255,255,255,0.9);">выберите "Lock Screen"</div>
+        </div>
+
+        <div class="warning-box">
+          <strong>Важно:</strong> В "Set Wallpaper Photo" нажмите стрелку (→) чтобы показать опции → отключите оба "<strong>Crop to Subject</strong>" и "<strong>Show Preview</strong>"<br>
+          Это предотвратит обрезку iOS и запрос подтверждения каждый раз
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-// Автоподстановка разрешения устройства
 const resolutionSelect = document.getElementById('resolution');
 function detectDeviceResolution() {
   const w = window.screen.width;
@@ -247,19 +375,19 @@ function detectDeviceResolution() {
 }
 detectDeviceResolution();
 
-// Генерация ссылки
 const generateBtn = document.getElementById('generate');
 const deadlineInput = document.getElementById('deadline');
 const titleInput = document.getElementById('title');
 const themeSelect = document.getElementById('theme');
 const output = document.getElementById('output');
 const outputWrapper = document.getElementById('output-wrapper');
+const shortcutUrlInput = document.getElementById('shortcut-url');
 
-generateBtn.addEventListener('click', () => {
+function generateUrl() {
   const deadline = deadlineInput.value;
   if (!deadline) {
     alert('Пожалуйста, выберите дату дедлайна');
-    return;
+    return null;
   }
 
   const title = titleInput.value.trim();
@@ -273,11 +401,18 @@ generateBtn.addEventListener('click', () => {
     url += '&title=' + encodeURIComponent(title);
   }
 
-  output.textContent = url;
-  outputWrapper.style.display = 'flex';
+  return url;
+}
+
+generateBtn.addEventListener('click', () => {
+  const url = generateUrl();
+  if (url) {
+    output.textContent = url;
+    shortcutUrlInput.value = url;
+    outputWrapper.style.display = 'flex';
+  }
 });
 
-// Копирование
 const copyBtn = document.getElementById('copy-btn');
 copyBtn.addEventListener('click', () => {
   if(output.textContent.trim() !== "") {
@@ -289,8 +424,31 @@ copyBtn.addEventListener('click', () => {
     });
   }
 });
+
+const copyUrlIcon = document.getElementById('copy-url-icon');
+copyUrlIcon.addEventListener('click', () => {
+  if(shortcutUrlInput.value.trim() !== "") {
+    navigator.clipboard.writeText(shortcutUrlInput.value).then(() => {
+      copyUrlIcon.style.opacity = '1';
+      setTimeout(() => {
+        copyUrlIcon.style.opacity = '0.7';
+      }, 2000);
+    });
+  }
+});
+
+[deadlineInput, titleInput, themeSelect, resolutionSelect].forEach(el => {
+  el.addEventListener('change', () => {
+    if(outputWrapper.style.display === 'flex') {
+      const url = generateUrl();
+      if (url) {
+        output.textContent = url;
+        shortcutUrlInput.value = url;
+      }
+    }
+  });
+});
 </script>
 
 </body>
 </html>
-
