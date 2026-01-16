@@ -12,28 +12,23 @@ html, body {
   height: 100%;
   font-family: Arial, sans-serif;
 }
-
 .container {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
 }
-
-/* Фон */
-.background {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div id="bg" class="background"></div>
+  <canvas id="canvas"></canvas>
 </div>
 
 <script>
@@ -50,16 +45,35 @@ function generateRandomSeed() {
   return dateStr + Math.random().toString(36).substring(2, 8);
 }
 
-/* Фоновая картинка */
-const width = getQueryParam("width") || "1920";
-const height = getQueryParam("height") || "1080";
+/* Параметры */
+const width = parseInt(getQueryParam("width") || "1920");
+const height = parseInt(getQueryParam("height") || "1080");
 const seed = generateRandomSeed();
-const imageUrl = `https://picsum.photos/seed/${seed}/${width}/${height}`;
 
-const bg = document.getElementById("bg");
-bg.style.backgroundImage = `url("${imageUrl}")`;
+/* Canvas и рендер */
+const canvas = document.getElementById('canvas');
+canvas.width = width;
+canvas.height = height;
+const ctx = canvas.getContext('2d');
+
+/* Загрузка фонового изображения */
+const img = new Image();
+img.crossOrigin = "anonymous";
+img.src = `https://picsum.photos/seed/${seed}/${width}/${height}`;
+img.onload = () => {
+  // Рисуем фон
+  ctx.drawImage(img, 0, 0, width, height);
+
+  // Здесь можно добавить прогресс или любые элементы поверх фона
+  // Пример: красный прямоугольник 100x100px в левом верхнем углу
+  // ctx.fillStyle = "#ff5252";
+  // ctx.fillRect(20, 20, 100, 100);
+
+  // Финальное изображение в base64 для Shortcuts
+  const finalUrl = canvas.toDataURL("image/png");
+  document.body.dataset.finalUrl = finalUrl;
+};
 </script>
 
 </body>
 </html>
-
