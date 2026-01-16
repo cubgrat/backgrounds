@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Календарь жизни</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Фон */
+.background {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.3s;
+}
+
+/* Темы */
+.theme-light .background {
+  filter: brightness(0.9);
+}
+
+.theme-dark .background {
+  filter: brightness(0.5);
+}
+
+/* Центрирование контента */
+.wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Карточка жизни */
+.life-card {
+  width: 90%;
+  max-width: 500px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  background: var(--card-bg);
+  color: var(--card-text);
+  padding: 30px;
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--title-color);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.stat-item {
+  padding: 20px;
+  background: var(--stat-bg);
+  border-radius: 12px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--stat-value);
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.weeks-grid {
+  display: grid;
+  grid-template-columns: repeat(52, 1fr);
+  gap: 2px;
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--grid-bg);
+  border-radius: 12px;
+}
+
+.week {
+  aspect-ratio: 1;
+  background: var(--week-empty);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.week.lived {
+  background: var(--week-lived);
+}
+
+.week.current {
+  background: var(--week-current);
+  box-shadow: 0 0 4px var(--week-current);
+}
+
+.info-text {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+/* Переменные тем */
+.theme-light {
+  --card-bg: rgba(255,255,255,0.95);
+  --card-text: #333;
+  --title-color: #4facfe;
+  --stat-bg: #f0f9ff;
+  --stat-value: #4facfe;
+  --grid-bg: #f5f5f5;
+  --week-empty: #e0e0e0;
+  --week-lived: #4facfe;
+  --week-current: #00f2fe;
+}
+
+.theme-dark {
+  --card-bg: rgba(30,30,30,0.95);
+  --card-text: #fff;
+  --title-color: #6bc5ff;
+  --stat-bg: #1a1a2e;
+  --stat-value: #6bc5ff;
+  --grid-bg: #2a2a3e;
+  --week-empty: #444;
+  --week-lived: #6bc5ff;
+  --week-current: #00f2fe;
+}
+</style>
+</head>
+<body>
+
+<div id="app" class="container theme-dark">
+  <div id="bg" class="background"></div>
+
+  <div class="wrapper">
+    <div class="life-card">
+      <div class="title">Календарь жизни</div>
+      
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-value" id="weeks-lived">0</div>
+          <div class="stat-label">Недель прожито</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="weeks-total">0</div>
+          <div class="stat-label">Всего недель (90 лет)</div>
+        </div>
+      </div>
+      
+      <div class="weeks-grid" id="weeks-grid"></div>
+      
+      <div class="info-text">
+        Каждая клетка = 1 неделя жизни. Синие клетки - прожитые недели, голубая - текущая неделя.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Утилиты */
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+function generateRandomSeed() {
+  return Math.random().toString(36).substring(2, 12) + Date.now();
+}
+
+/* Тема */
+const theme = getQueryParam("theme");
+const app = document.getElementById("app");
+
+if (theme === "0") {
+  app.className = "container theme-light";
+} else {
+  app.className = "container theme-dark";
+}
+
+/* Фоновая картинка */
+const width = getQueryParam("width") || "1920";
+const height = getQueryParam("height") || "1080";
+const seed = generateRandomSeed();
+const imageUrl = `https://picsum.photos/seed/${seed}/${width}/${height}`;
+
+const bg = document.getElementById("bg");
+bg.style.backgroundImage = `url("${imageUrl}")`;
+
+/* Календарь жизни */
+const birthdayStr = getQueryParam("birthday");
+const weeksGrid = document.getElementById("weeks-grid");
+const totalWeeks = 90 * 52; // 90 лет в неделях
+
+if (!birthdayStr) {
+  document.getElementById("weeks-lived").textContent = "0";
+  document.getElementById("weeks-total").textContent = totalWeeks;
+  for (let i = 0; i < totalWeeks; i++) {
+    const week = document.createElement("div");
+    week.className = "week";
+    weeksGrid.appendChild(week);
+  }
+} else {
+  const birthday = new Date(birthdayStr);
+  const now = new Date();
+  
+  // Вычисляем количество прожитых недель
+  const msPerWeek = 1000 * 60 * 60 * 24 * 7;
+  const weeksLived = Math.floor((now - birthday) / msPerWeek);
+  const currentWeek = weeksLived;
+  
+  document.getElementById("weeks-lived").textContent = weeksLived.toLocaleString();
+  document.getElementById("weeks-total").textContent = totalWeeks.toLocaleString();
+  
+  // Создаем сетку недель
+  for (let i = 0; i < totalWeeks; i++) {
+    const week = document.createElement("div");
+    week.className = "week";
+    
+    if (i < weeksLived) {
+      week.classList.add("lived");
+    } else if (i === weeksLived) {
+      week.classList.add("current");
+    }
+    
+    weeksGrid.appendChild(week);
+  }
+}
+</script>
+
+</body>
+</html>
+

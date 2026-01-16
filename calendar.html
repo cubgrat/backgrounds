@@ -76,6 +76,16 @@ html, body {
   opacity: 0.8;
 }
 
+/* Текст */
+.custom-text {
+  text-align: center;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--calendar-text);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
 /* Дни недели */
 .weekdays {
   display: grid;
@@ -149,6 +159,7 @@ html, body {
     <div class="calendar">
       <div id="month" class="calendar-header"></div>
       <div id="info" class="calendar-sub"></div>
+      <div id="custom-text" class="custom-text" style="display: none;"></div>
 
       <div class="weekdays">
         <div>Пн</div>
@@ -187,8 +198,10 @@ if (theme === "0") {
 }
 
 /* Фоновая картинка */
+const width = getQueryParam("width") || "1920";
+const height = getQueryParam("height") || "1080";
 const seed = generateRandomSeed();
-const imageUrl = `https://picsum.photos/seed/${seed}/1920/1080`;
+const imageUrl = `https://picsum.photos/seed/${seed}/${width}/${height}`;
 
 const bg = document.getElementById("bg");
 bg.style.backgroundImage = `url("${imageUrl}")`;
@@ -207,6 +220,14 @@ const months = [
 
 document.getElementById("month").textContent = months[month];
 document.getElementById("info").textContent = year;
+
+/* Кастомный текст */
+const customText = getQueryParam("q");
+if (customText) {
+  const textElement = document.getElementById("custom-text");
+  textElement.textContent = decodeURIComponent(customText);
+  textElement.style.display = "block";
+}
 
 /* Количество дней в месяце */
 const daysInMonth = new Date(year, month + 1, 0).getDate();

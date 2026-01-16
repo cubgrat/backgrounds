@@ -2,252 +2,155 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Random Landscape Calendar - Главная</title>
+<title>Динамические обои - Главная</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background: #1e1e1e;
-  color: #fff;
-  transition: background 0.3s, color 0.3s;
+  padding: 20px;
 }
 
 .container {
-  background: #2e2e2e;
-  padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-  width: 360px;
+  max-width: 1200px;
+  width: 100%;
   text-align: center;
-  transition: background 0.3s, color 0.3s;
 }
 
 h1 {
-  font-size: 20px;
+  color: #fff;
+  font-size: 48px;
   margin-bottom: 16px;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-label {
+.subtitle {
+  color: rgba(255,255,255,0.9);
+  font-size: 20px;
+  margin-bottom: 60px;
+  font-weight: 300;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.tile {
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 40px 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-decoration: none;
+  color: inherit;
   display: block;
-  margin-top: 12px;
-  font-size: 14px;
 }
 
-input[type="text"], select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 6px;
-  border-radius: 6px;
-  border: 1px solid #555;
-  background: #3a3a3a;
-  color: #fff;
-}
-
-button {
-  margin-top: 20px;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-#generate {
-  background: #e53935;
-  color: #fff;
-  width: 100%;
-}
-
-#generate:hover {
-  background: #d32f2f;
-}
-
-#theme-toggle {
-  background: #555;
-  color: #fff;
-  width: 100%;
-  margin-top: 10px;
-}
-
-#theme-toggle:hover {
-  background: #777;
-}
-
-.output-container {
-  margin-top: 16px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-}
-
-.output {
-  word-break: break-all;
-  font-size: 14px;
-  flex: 1;
-}
-
-.copy-btn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
-  background: #e53935;
-  color: #fff;
-  cursor: pointer;
-}
-
-.copy-btn:hover {
-  background: #d32f2f;
-}
-
-.light-theme {
-  background: #f5f5f5;
-  color: #111;
-}
-
-.light-theme .container {
+.tile:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
   background: #fff;
-  color: #111;
 }
 
-.light-theme input[type="text"], .light-theme select {
-  background: #eee;
-  color: #111;
-  border: 1px solid #ccc;
+.tile-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.tile-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.tile-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.footer-link {
+  display: inline-block;
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.8);
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 36px;
+  }
+  
+  .subtitle {
+    font-size: 18px;
+  }
+  
+  .tiles-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 </style>
 </head>
-<body class="dark-theme">
+<body>
 
 <div class="container">
-  <h1>Сгенерировать ссылку на календарь</h1>
+  <h1>Динамические обои</h1>
+  <p class="subtitle">Выберите тип обоев для вашего устройства</p>
 
-  <label for="theme">Тема:</label>
-  <select id="theme">
-    <option value="1" selected>Тёмная</option>
-    <option value="0">Светлая</option>
-  </select>
-
-  <label for="text">Текст (опционально):</label>
-  <input type="text" id="text" placeholder="Введите текст для календаря">
-
-  <label for="resolution">Устройство / разрешение:</label>
-  <select id="resolution">
-    <option value="1920x1080">1920x1080 (Full HD)</option>
-    <option value="2560x1440">2560x1440 (2K)</option>
-    <option value="3840x2160">3840x2160 (4K)</option>
-
-    <!-- iPhone -->
-    <option value="1170x2532">iPhone 13/14/15</option>
-    <option value="1284x2778">iPhone 13/14/15 Pro Max</option>
-    <option value="1080x2340">iPhone 12 mini / SE 2</option>
-    <option value="1125x2436">iPhone X/XS/11 Pro</option>
-    <option value="1242x2688">iPhone 8 Plus / XS Max</option>
-    <option value="1179x2556">iPhone 14 Pro</option>
-    <option value="1290x2796">iPhone 14 Pro Max</option>
-  </select>
-
-  <button id="generate">Сгенерировать ссылку</button>
-  <button id="theme-toggle">Переключить тему</button>
-
-  <div class="output-container">
-    <div class="output" id="output"></div>
-    <button class="copy-btn" id="copy-btn">Копировать</button>
-  </div>
-</div>
-
-<script>
-// Тема
-const body = document.body;
-const themeSelect = document.getElementById('theme');
-const themeToggle = document.getElementById('theme-toggle');
-let currentTheme = 'dark';
-
-themeToggle.addEventListener('click', () => {
-  if(currentTheme === 'dark') {
-    body.classList.add('light-theme');
-    body.classList.remove('dark-theme');
-    themeSelect.value = '0';
-    currentTheme = 'light';
-  } else {
-    body.classList.remove('light-theme');
-    body.classList.add('dark-theme');
-    themeSelect.value = '1';
-    currentTheme = 'dark';
-  }
-});
-
-// Автоподстановка разрешения устройства
-const resolutionSelect = document.getElementById('resolution');
-function detectDeviceResolution() {
-  const w = window.screen.width;
-  const h = window.screen.height;
-  const resStr = `${w}x${h}`;
-
-  for (let i = 0; i < resolutionSelect.options.length; i++) {
-    if (resolutionSelect.options[i].value === resStr) {
-      resolutionSelect.selectedIndex = i;
-      return;
-    }
-  }
-
-  // Добавляем свой вариант, если нет в списке
-  const option = document.createElement('option');
-  option.value = resStr;
-  option.textContent = `Ваше устройство (${resStr})`;
-  option.selected = true;
-  resolutionSelect.appendChild(option);
-}
-detectDeviceResolution();
-
-// Генерация ссылки
-const generateBtn = document.getElementById('generate');
-const textInput = document.getElementById('text');
-const output = document.getElementById('output');
-
-generateBtn.addEventListener('click', () => {
-  const theme = themeSelect.value;
-  const text = textInput.value.trim();
-  const resolution = resolutionSelect.value;
-
-  let url = window.location.origin + '/backgrounds/calendar.html?theme=' + theme + '&res=' + resolution;
-
-  if(text !== "") {
-    url += '&q=' + encodeURIComponent(text);
-  }
-
-  output.textContent = url;
-});
-
-// Копирование
-const copyBtn = document.getElementById('copy-btn');
-copyBtn.addEventListener('click', () => {
-  if(output.textContent.trim() !== "") {
-    navigator.clipboard.writeText(output.textContent).then(() => {
-      alert('Ссылка скопирована в буфер обмена');
-    });
-  }
-});
-</script>
-<div style="text-align: center; margin-top: 200px;">
-    <a href="common/about.html" 
-       style="
-           display: inline-block;
-           padding: 30px 60px;
-           font-size: 32px;
-           background-color: #007bff;
-           color: white;
-           text-decoration: none;
-           border-radius: 12px;
-       ">
-        FAQ
+  <div class="tiles-grid">
+    <a href="config-calendar.html" class="tile">
+      <div class="tile-icon">📅</div>
+      <div class="tile-title">Календарь</div>
+      <div class="tile-description">Календарь с красивым фоном и текущей датой</div>
     </a>
+
+    <a href="config-deadline.html" class="tile">
+      <div class="tile-icon">⏰</div>
+      <div class="tile-title">Прогресс дедлайна</div>
+      <div class="tile-description">Визуализация прогресса до важной даты или события</div>
+    </a>
+
+    <a href="config-life.html" class="tile">
+      <div class="tile-icon">🎯</div>
+      <div class="tile-title">Прогресс жизни</div>
+      <div class="tile-description">Календарь жизни - визуализация прожитых недель</div>
+    </a>
+
+    <a href="config-wallpaper.html" class="tile">
+      <div class="tile-icon">🖼️</div>
+      <div class="tile-title">Только обои</div>
+      <div class="tile-description">Красивые случайные обои без дополнительных элементов</div>
+    </a>
+  </div>
+
+  <a href="common/about.html" class="footer-link">О проекте</a>
 </div>
+
 </body>
 </html>

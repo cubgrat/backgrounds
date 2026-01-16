@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Прогресс дедлайна</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Фон */
+.background {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.3s;
+}
+
+/* Темы */
+.theme-light .background {
+  filter: brightness(0.9);
+}
+
+.theme-dark .background {
+  filter: brightness(0.5);
+}
+
+/* Центрирование контента */
+.wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Карточка прогресса */
+.progress-card {
+  width: 90%;
+  max-width: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  background: var(--card-bg);
+  color: var(--card-text);
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--title-color);
+}
+
+.deadline-date {
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+.progress-container {
+  margin: 30px 0;
+}
+
+.progress-label {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: var(--progress-bg);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--progress-fill);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--progress-text);
+  margin: 20px 0;
+}
+
+.time-remaining {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-top: 20px;
+}
+
+/* Переменные тем */
+.theme-light {
+  --card-bg: rgba(255,255,255,0.95);
+  --card-text: #333;
+  --title-color: #f5576c;
+  --progress-bg: #f0f0f0;
+  --progress-fill: #f5576c;
+  --progress-text: #f5576c;
+}
+
+.theme-dark {
+  --card-bg: rgba(30,30,30,0.95);
+  --card-text: #fff;
+  --title-color: #ff6b7a;
+  --progress-bg: #444;
+  --progress-fill: #ff6b7a;
+  --progress-text: #ff6b7a;
+}
+</style>
+</head>
+<body>
+
+<div id="app" class="container theme-dark">
+  <div id="bg" class="background"></div>
+
+  <div class="wrapper">
+    <div class="progress-card">
+      <div class="title" id="title">Дедлайн</div>
+      <div class="deadline-date" id="deadline-date"></div>
+      
+      <div class="progress-container">
+        <div class="progress-label">Прогресс</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0%</div>
+      </div>
+      
+      <div class="time-remaining" id="time-remaining"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Утилиты */
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+function generateRandomSeed() {
+  return Math.random().toString(36).substring(2, 12) + Date.now();
+}
+
+function formatDate(date) {
+  const months = [
+    "Января","Февраля","Марта","Апреля","Мая","Июня",
+    "Июля","Августа","Сентября","Октября","Ноября","Декабря"
+  ];
+  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function formatTimeRemaining(days, hours, minutes) {
+  if (days < 0) return "Событие прошло";
+  if (days > 0) return `${days} ${days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}`;
+  if (hours > 0) return `${hours} ${hours === 1 ? 'час' : hours < 5 ? 'часа' : 'часов'}`;
+  return `${minutes} ${minutes === 1 ? 'минута' : minutes < 5 ? 'минуты' : 'минут'}`;
+}
+
+/* Тема */
+const theme = getQueryParam("theme");
+const app = document.getElementById("app");
+
+if (theme === "0") {
+  app.className = "container theme-light";
+} else {
+  app.className = "container theme-dark";
+}
+
+/* Фоновая картинка */
+const width = getQueryParam("width") || "1920";
+const height = getQueryParam("height") || "1080";
+const seed = generateRandomSeed();
+const imageUrl = `https://picsum.photos/seed/${seed}/${width}/${height}`;
+
+const bg = document.getElementById("bg");
+bg.style.backgroundImage = `url("${imageUrl}")`;
+
+/* Параметры дедлайна */
+const deadlineStr = getQueryParam("deadline");
+const titleParam = getQueryParam("title");
+
+if (titleParam) {
+  document.getElementById("title").textContent = decodeURIComponent(titleParam);
+}
+
+if (!deadlineStr) {
+  document.getElementById("deadline-date").textContent = "Дата не указана";
+  document.getElementById("progress-text").textContent = "0%";
+  document.getElementById("time-remaining").textContent = "";
+} else {
+  const deadline = new Date(deadlineStr + "T23:59:59");
+  const now = new Date();
+  
+  document.getElementById("deadline-date").textContent = formatDate(deadline);
+  
+  function updateProgress() {
+    const now = new Date();
+    const startDate = new Date(deadline.getFullYear(), 0, 1); // Начало года
+    const total = deadline - startDate;
+    const elapsed = now - startDate;
+    let progress = Math.max(0, Math.min(100, (elapsed / total) * 100));
+    
+    // Если дедлайн прошел, прогресс = 100%
+    if (now > deadline) {
+      progress = 100;
+    }
+    
+    const remaining = deadline - now;
+    const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    
+    document.getElementById("progress-fill").style.width = progress + "%";
+    document.getElementById("progress-text").textContent = progress.toFixed(1) + "%";
+    document.getElementById("time-remaining").textContent = formatTimeRemaining(days, hours, minutes);
+  }
+  
+  updateProgress();
+  setInterval(updateProgress, 60000); // Обновление каждую минуту
+}
+</script>
+
+</body>
+</html>
+
