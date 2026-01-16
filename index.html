@@ -1,178 +1,84 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <title>Рандомный пейзаж</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>Случайный пейзаж</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
-    :root{--gap:24px}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-    .wrap{
-      position:relative;
-      width:100%;
-      height:100vh;
-      overflow:hidden;
-      background:#111;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
     }
-    .bg{
-      position:absolute;inset:0;
-      background-position:center;
-      background-size:cover;
-      filter:brightness(.55) saturate(1.05);
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
     }
-    .overlay {
-      position:relative;
-      z-index:2;
-      text-align:center;
-      color:#fff;
-      padding:var(--gap);
-      max-width:90%;
-      pointer-events:none;
+
+    .background {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.6);
     }
-    .title {
-      font-size:clamp(20px,4vw,48px);
-      font-weight:700;
-      text-shadow:0 6px 18px rgba(0,0,0,.6);
-      margin-bottom:12px;
-      word-wrap:break-word;
-    }
-    .sub {
-      font-size:clamp(14px,1.8vw,18px);
-      opacity:.9;
-    }
-    .controls {
-      position:absolute;
-      left:12px;
-      top:12px;
-      z-index:3;
-      display:flex;
-      gap:8px;
-    }
-    .controls a, .controls button {
-      background:rgba(255,255,255,0.12);
-      color:#fff;
-      border:0;
-      padding:8px 12px;
-      border-radius:8px;
-      text-decoration:none;
-      cursor:pointer;
-      font-size:13px;
+
+    .text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: clamp(24px, 5vw, 64px);
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+      padding: 20px;
+      pointer-events: none;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div id="bg" class="bg" aria-hidden="true"></div>
 
-    <div class="overlay">
-      <div id="title" class="title">Случайный пейзаж</div>
-      <div id="sub" class="sub">Обнови страницу, чтобы получить другую картинку</div>
-    </div>
-
-    <div class="controls">
-      <a id="link-refresh" href="#">Обновить</a>
-      <button id="btn-download">Скачать (запечь текст)</button>
-    </div>
-  </div>
+<div class="container">
+  <div id="bg" class="background"></div>
+  <div id="text" class="text" style="display: none;"></div>
+</div>
 
 <script>
-/*
-  Логика:
-  - Если в URL есть параметр q, используем его:
-      * как seed для picsum.photos (https://picsum.photos/seed/<seed>/WxH)
-      * и выводим как заголовок поверх картинки
-  - Если параметра q нет, запрашиваем полностью случайную картинку через
-    https://picsum.photos/1920/1080?random=<timestamp> (чтобы не кэшировалось)
-*/
-
-function getParam(name){
-  return new URLSearchParams(location.search).get(name);
-}
-
-const q = getParam('q'); // строка из адресной строки: ?q=текст
-const bg = document.getElementById('bg');
-const title = document.getElementById('title');
-const sub = document.getElementById('sub');
-const linkRefresh = document.getElementById('link-refresh');
-const btnDownload = document.getElementById('btn-download');
-
-function makeImageUrl() {
-  const w = 1920, h = 1080;
-  if (q) {
-    // детерминированный результат по строке
-    const seed = encodeURIComponent(q);
-    return `https://picsum.photos/seed/${seed}/${w}/${h}`;
-  } else {
-    // полностью случайно каждый раз
-    return `https://picsum.photos/${w}/${h}?random=${Date.now()}${Math.floor(Math.random()*1000)}`;
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
   }
-}
 
-function apply() {
-  const imgUrl = makeImageUrl();
-  // используем background-image — это надёжно, не тащит canvas прямо
-  bg.style.backgroundImage = `url("${imgUrl}")`;
-
-  if (q) {
-    title.textContent = q;
-    sub.textContent = 'Текст из адресной строки вставлен поверх картинки';
-    // refresh ссылка должна сохранять параметр q
-    linkRefresh.href = `${location.pathname}?q=${encodeURIComponent(q)}&r=${Date.now()}`;
-  } else {
-    title.textContent = 'Случайный пейзаж';
-    sub.textContent = 'Без параметра q — картинка выбирается случайно';
-    linkRefresh.href = `${location.pathname}?r=${Date.now()}`;
+  // Генерируем полностью случайный seed
+  function generateRandomSeed() {
+    return Math.random().toString(36).substring(2, 12) + Date.now();
   }
-}
 
-apply();
+  const randomSeed = generateRandomSeed();
+  const imageUrl = `https://picsum.photos/seed/${randomSeed}/1920/1080`;
 
-// Попытка "запечь" текст в картинку и скачать.
-// ВАЖНО: для записи в canvas внешний ресурс должен отдавать CORS-заголовок.
-// Если сервер не даёт Access-Control-Allow-Origin, операция упадёт.
-btnDownload.addEventListener('click', async ()=> {
-  const imgUrl = makeImageUrl();
-  try {
-    const img = new Image();
-    img.crossOrigin = 'anonymous'; // мы просим CORS; если сервер не отдаст — canvas будет загрязнён и вызовет ошибку при toDataURL
-    img.src = imgUrl + (imgUrl.includes('?') ? '&_cb=' : '?_cb=') + Date.now();
-    await img.decode();
+  // Устанавливаем фон
+  const bg = document.getElementById("bg");
+  bg.style.backgroundImage = `url("${imageUrl}")`;
 
-    // рисуем в canvas
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth || 1920;
-    canvas.height = img.naturalHeight || 1080;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  // Читаем текст из ?q=
+  const q = getQueryParam("q");
+  const textBlock = document.getElementById("text");
 
-    // текст поверх: стиль
-    ctx.fillStyle = 'rgba(0,0,0,0.45)';
-    ctx.fillRect(0, canvas.height - 160, canvas.width, 160);
-    ctx.font = 'bold 64px sans-serif';
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const text = q ? q : 'Random Landscape';
-    ctx.fillText(text, canvas.width/2, canvas.height - 80);
-
-    // скачать
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = (q ? q : 'landscape') + '.jpg';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-  } catch (err) {
-    // сюда попадём, если CORS не позволит читать картинку в canvas
-    alert('Не удалось "запечь" картинку из-за ограничений CORS. Можно использовать только CSS-оверлей для отображения.\n(Это нормально для публичного хостинга изображений.)');
-    console.error(err);
+  if (q && q.trim() !== "") {
+    textBlock.textContent = q;
+    textBlock.style.display = "flex";
   }
-});
 </script>
+
 </body>
 </html>
