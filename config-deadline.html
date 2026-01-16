@@ -383,14 +383,26 @@ function generateUrl() {
     return null;
   }
 
+  const now = new Date();
+  const start =
+    now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0");
+
   const title = titleInput.value.trim();
   const theme = themeSelect.value;
   const resolution = resolutionSelect.value;
   const [width, height] = resolution.split('x');
 
-  let url = window.location.origin + '/backgrounds/deadline.html?deadline=' + deadline + '&theme=' + theme + '&width=' + width + '&height=' + height;
+  let url = window.location.origin +
+    '/backgrounds/deadline.html' +
+    '?start=' + start +
+    '&deadline=' + deadline +
+    '&theme=' + theme +
+    '&width=' + width +
+    '&height=' + height;
 
-  if(title !== "") {
+  if (title !== "") {
     url += '&title=' + encodeURIComponent(title);
   }
 

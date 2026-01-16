@@ -184,6 +184,7 @@ const bg = document.getElementById("bg");
 bg.style.backgroundImage = `url("${imageUrl}")`;
 
 /* Параметры дедлайна */
+const startStr = getQueryParam("start");
 const deadlineStr = getQueryParam("deadline");
 const titleParam = getQueryParam("title");
 const daysGrid = document.getElementById("days-grid");
@@ -195,36 +196,28 @@ if (titleParam) {
   titleElement.style.display = "block";
 }
 
-if (!deadlineStr) {
+if (!deadlineStr || !startStr) {
   progressTextElement.textContent = "0%";
-  for (let i = 0; i < 365; i++) {
+  for (let i = 0; i < 364; i++) {
     const day = document.createElement("div");
     day.className = "day";
     daysGrid.appendChild(day);
   }
 } else {
-  const deadline = new Date(deadlineStr + "T23:59:59");
+
   const now = new Date();
-  
-  function updateProgress() {
-    const now = new Date();
-    const startDate = new Date(deadline.getFullYear(), 0, 1); // Начало года
-    const total = deadline - startDate;
-    const elapsed = now - startDate;
-    const totalDays = Math.ceil(total / (1000 * 60 * 60 * 24));
-    const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
-    
-    // Вычисляем процент прогресса
-    let progress = 0;
-    if (totalDays > 0) {
-      progress = Math.max(0, Math.min(100, (daysPassed / totalDays) * 100));
-    }
-    if (now > deadline) {
-      progress = 100;
-    }
-    
-    progressTextElement.textContent = `${progress.toFixed(1)}%`;
-    
+  const deadline = new Date(deadlineStr + "T23:59:59");
+  const startDate = new Date(startStr + "T00:00:00");
+
+function updateProgress() {
+  const now = new Date();
+  const total = deadline - startDate;
+  const elapsed = now - startDate;
+  const totalDays = Math.ceil(total / (1000 * 60 * 60 * 24));
+  const daysPassed = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+
+  progressTextElement.textContent = `${daysPassed / totalDays * 100}%`;
+
     // Фиксированный размер сетки (26 колонок x 52 строки = 1352 ячейки, как в life но в два раза меньше)
     const gridColumns = 26;
     const gridRows = 52;
