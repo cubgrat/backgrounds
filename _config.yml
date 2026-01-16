@@ -1,0 +1,13 @@
+title: Random Landscape
+description: Сайт со случайными пейзажами и текстом из URL
+url: "https://cubgrat.github.io/backgrounds"
+baseurl: ""
+
+theme: null
+
+markdown: kramdown
+plugins: []
+
+exclude:
+  - .github
+  - README.md
